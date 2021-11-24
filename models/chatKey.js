@@ -3,16 +3,16 @@ const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet("123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4);
 
 const chatKeySchema = new mongoose.Schema({
-	chatId: {
-		type: Number,
-		required: true
-	},
 	chatKey: {
 		type: String,
 		required: true,
 		unique: true,
 		dropDups: true,
 		default: () => nanoid()
+	},
+	chatId: {
+		type: Number,
+		required: true
 	},
 	createdById: {
 		type: Number,

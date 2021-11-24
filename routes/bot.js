@@ -3,12 +3,12 @@ const router = express.Router();
 const logger = require("loglevel").getLogger("logger");
 const axios = require("axios");
 const ChatKey = require("../models/chatKey");
+const { createChatKey } = require("../services/chatKeyService");
 
 const { TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
 
 router.post("/", async (req, res) => {
-	logger.info(req.body);
 	const chatId = req.body.message.chat.id;
 	const text = req.body.message.text.toLowerCase();
 	const senderId = req.body.message.from.id;
@@ -19,8 +19,8 @@ router.post("/", async (req, res) => {
 			reply = "Hommaa ittelles avain /avain";
 			break;
 		case "/avain":
-			const chatKey = await createChatKey(chatId, senderId);
-			reply = chatKey === null ? "Ei onnistunu" : `Jäbälle avain: ${chatKey}`;
+			const chat = await createChatKey(chatId, senderId);
+			reply = chat === null ? "Ei onnistunu" : `Jäbälle avain: ${chat.chatKey}`;
 			break;
 		default:
 			reply = "hä?";
@@ -49,28 +49,5 @@ router.get("/", async (req, res) => {
 		logger.error("Error getting chat keys: ", err);
 	}
 });
-
-async function createChatKey(chatId, createdById) {
-	try {
-		const existingChats = await ChatKey.find({ chatId, createdById });
-		for (let i = 0; i < existingChats.length; i++) {
-			const existingChat = existingChats[i];
-			logger.info(
-				`Removing existing chat key '${existingChat.chatKey}' for user '${existingChat.createdById}'`
-			);
-			existingChat.remove();
-		}
-
-		const chat = new ChatKey({
-			chatId: chatId,
-			createdById: createdById
-		});
-		const savedChat = await chat.save();
-		return savedChat.chatKey;
-	} catch (err) {
-		logger.error("Error creating a chat key: ", err);
-		return null;
-	}
-}
 
 module.exports = router;

@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 const botRouter = require("./routes/bot");
 app.use(BOT_URI, botRouter);
 
+const messageSenderRouter = require("./routes/messageSender");
+app.use("/bot/sendMessage", messageSenderRouter);
+
 app.listen(PORT || 5000, async () => {
 	logger.info("App running on port", process.env.PORT || 5000);
 	await init();
