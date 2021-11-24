@@ -1,6 +1,6 @@
 # telegram-bot
 
 ## .env
-`TOKEN=<token>`
+`TOKEN=<telegram bot api token>`
 `SERVER_URL=<server url>`
-`MONGO_CONNECTION_STRING=<mongodb conn string>`
+`MONGO_CONNECTION_STRING=<mongodb connection string>`
