@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
 
 	const chat = await getChatKey(chatKey);
 	if (!chat) {
-		return res.sendStatus(404);
+		return res.status(404).send({ ok: false });
 	}
 	try {
 		await axios.post(`${TELEGRAM_API}/sendMessage`, {
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 		return res.status(200).send({ ok: true });
 	} catch (err) {
 		logger.error("Error sending a message: ", err);
-		return res.sendStatus(500);
+		return res.status(500).send({ ok: false });
 	}
 });
 
