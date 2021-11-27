@@ -17,10 +17,10 @@ router.get("/:chatKey", async (req, res) => {
 				});
 			}
 		}
-		res.status(404);
+		return res.status(404).send();
 	} catch (err) {
 		logger.error(`Error getting chat key '${chatKey}': `, err);
-		res.status(500);
+		return res.status(500).send();
 	}
 });
 
