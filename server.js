@@ -17,12 +17,14 @@ const WEBHOOK_URL = `${SERVER_URL}${BOT_URI}`;
 
 app.use(bodyParser.json());
 
-// TODO check the routes
 const botRouter = require("./routes/bot");
 app.use(BOT_URI, botRouter);
 
 const sendMessageRouter = require("./routes/sendMessage");
 app.use("/bot/sendMessage", sendMessageRouter);
+
+const chatKeyRouter = require("./routes/chatKey");
+app.use("/bot/chatKey", chatKeyRouter);
 
 app.listen(PORT || 5000, async () => {
 	logger.info("App running on port", process.env.PORT || 5000);

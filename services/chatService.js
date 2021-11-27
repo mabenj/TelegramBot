@@ -1,13 +1,13 @@
-const ChatKey = require("../models/chatKey");
+const Chat = require("../models/chat");
 const logger = require("loglevel").getLogger("logger");
 
-function getChatKey(key) {
-	return ChatKey.findOne({ chatKey: key });
+function getChat(key) {
+	return Chat.findOne({ chatKey: key });
 }
 
-async function createChatKey(chatId, createdById) {
+async function createChat(chatId, createdById) {
 	try {
-		const existingChats = await ChatKey.find({ chatId, createdById });
+		const existingChats = await Chat.find({ chatId, createdById });
 		for (let i = 0; i < existingChats.length; i++) {
 			const existingChat = existingChats[i];
 			logger.info(
@@ -16,7 +16,7 @@ async function createChatKey(chatId, createdById) {
 			existingChat.remove();
 		}
 
-		const chat = new ChatKey({
+		const chat = new Chat({
 			chatId: chatId,
 			createdById: createdById
 		});
@@ -28,4 +28,4 @@ async function createChatKey(chatId, createdById) {
 	}
 }
 
-module.exports = { getChatKey, createChatKey };
+module.exports = { getChat, createChat };

@@ -2,15 +2,14 @@ const express = require("express");
 const router = express.Router();
 const logger = require("loglevel").getLogger("logger");
 const axios = require("axios");
-const { getChatKey } = require("../services/chatKeyService");
+const { getChat } = require("../services/chatService");
 
 const { TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
 
 router.post("/", async (req, res) => {
 	const { chatKey, message } = req.body;
-
-	const chat = await getChatKey(chatKey);
+	const chat = await getChat(chatKey.toUpperCase());
 	if (!chat) {
 		return res.status(404).send({ ok: false });
 	}

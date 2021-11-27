@@ -2,11 +2,21 @@ const express = require("express");
 const router = express.Router();
 const logger = require("loglevel").getLogger("logger");
 const axios = require("axios");
-const ChatKey = require("../models/chatKey");
-const { createChatKey } = require("../services/chatKeyService");
+const Chat = require("../models/chat");
+const { createChat } = require("../services/chatService");
 
 const { TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
+
+const DEFAULT_RESPONSES = [
+	"hä?",
+	"häh?",
+	"mitä nää sanoit?",
+	"kui?",
+	"mitä sää selitäs?",
+	"sanos uusiks",
+	"en tajuu"
+];
 
 router.post("/", async (req, res) => {
 	const chatId = req.body.message.chat.id;
@@ -19,11 +29,12 @@ router.post("/", async (req, res) => {
 			reply = "Hommaa ittelles avain /avain";
 			break;
 		case "/avain":
-			const chat = await createChatKey(chatId, senderId);
+			const chat = await createChat(chatId, senderId);
 			reply = chat === null ? "Ei onnistunu" : `Jäbälle avain: ${chat.chatKey}`;
 			break;
 		default:
-			reply = "hä?";
+			reply =
+				DEFAULT_RESPONSES[Math.floor(Math.random() * DEFAULT_RESPONSES.length)];
 	}
 
 	try {
@@ -34,19 +45,6 @@ router.post("/", async (req, res) => {
 		return res.send();
 	} catch (err) {
 		logger.error("Error sending a reply: ", err);
-	}
-});
-
-router.get("/", async (req, res) => {
-	const { chatKey } = req.query;
-	try {
-		if (chatKey) {
-			res.json(await ChatKey.find({ chatKey }));
-		} else {
-			res.json(await ChatKey.find());
-		}
-	} catch (err) {
-		logger.error("Error getting chat keys: ", err);
 	}
 });
 

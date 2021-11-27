@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet("123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4);
 
-const chatKeySchema = new mongoose.Schema({
+const chatSchema = new mongoose.Schema({
 	chatKey: {
 		type: String,
 		required: true,
@@ -25,4 +25,4 @@ const chatKeySchema = new mongoose.Schema({
 	}
 });
 
-module.exports = mongoose.model("ChatKey", chatKeySchema);
+module.exports = mongoose.model("Chat", chatSchema);
