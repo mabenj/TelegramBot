@@ -13,38 +13,48 @@ const DEFAULT_RESPONSES = [
 	"häh?",
 	"mitä nää sanoit?",
 	"kui?",
-	"mitä sää selitäs?",
+	"mitä sää selitäs",
 	"sanos uusiks",
-	"en tajuu"
+	"en tajuu",
+	"???",
+	"onk pääs vikaa?",
+	"ok"
 ];
 
 router.post("/", async (req, res) => {
-	const chatId = req.body.message.chat.id;
-	const text = req.body.message.text.toLowerCase();
-	const senderId = req.body.message.from.id;
-
-	let reply = "";
-	switch (text) {
-		case "/start":
-			reply = "Hommaa ittelles avain /avain";
-			break;
-		case "/avain":
-			const chat = await createChat(chatId, senderId);
-			reply = chat === null ? "Ei onnistunu" : `Jäbälle avain: ${chat.chatKey}`;
-			break;
-		default:
-			reply =
-				DEFAULT_RESPONSES[Math.floor(Math.random() * DEFAULT_RESPONSES.length)];
-	}
-
 	try {
-		await axios.post(`${TELEGRAM_API}/sendMessage`, {
-			chat_id: chatId,
-			text: reply
-		});
-		return res.send();
-	} catch (err) {
-		logger.error("Error sending a reply: ", err);
+		const chatId = req.body.message.chat.id;
+		const text = req.body.message.text?.toLowerCase();
+		const senderId = req.body.message.from.id;
+
+		let reply = "";
+		switch (text) {
+			case "/start":
+				reply = "Hommaa ittelles avain /avain";
+				break;
+			case "/avain":
+				const chat = await createChat(chatId, senderId);
+				reply =
+					chat === null ? "Ei onnistunu" : `Jäbälle avain: ${chat.chatKey}`;
+				break;
+			default:
+				reply =
+					DEFAULT_RESPONSES[
+						Math.floor(Math.random() * DEFAULT_RESPONSES.length)
+					];
+		}
+
+		try {
+			await axios.post(`${TELEGRAM_API}/sendMessage`, {
+				chat_id: chatId,
+				text: reply
+			});
+			return res.send();
+		} catch (err) {
+			logger.error("Error sending a reply: ", err);
+		}
+	} catch {
+		return res.status(500).send();
 	}
 });
 
