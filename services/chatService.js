@@ -1,12 +1,11 @@
-import Chat from "../models/chat";
-import loglevel from "loglevel";
-const logger = loglevel.getLogger("logger");
+const Chat = require("../models/chat");
+const logger = require("loglevel").getLogger("logger");
 
-function getChat(key: string) {
+function getChat(key) {
 	return Chat.findOne({ chatKey: key });
 }
 
-async function createChat(chatId: string, createdById: string) {
+async function createChat(chatId, createdById) {
 	try {
 		const existingChats = await Chat.find({ chatId, createdById });
 		for (let i = 0; i < existingChats.length; i++) {
@@ -29,4 +28,4 @@ async function createChat(chatId: string, createdById: string) {
 	}
 }
 
-export { getChat, createChat };
+module.exports = { getChat, createChat };

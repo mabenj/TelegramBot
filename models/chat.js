@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { customAlphabet } from "nanoid";
+const mongoose = require("mongoose");
+const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet("123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4);
 
 const chatSchema = new mongoose.Schema({
@@ -25,4 +25,4 @@ const chatSchema = new mongoose.Schema({
 	}
 });
 
-export default mongoose.model("Chat", chatSchema);
+module.exports = mongoose.model("Chat", chatSchema);
