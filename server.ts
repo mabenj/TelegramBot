@@ -1,9 +1,11 @@
-const express = require("express");
+import express from "express";
+import bodyParser from "body-parser";
+import axios from "axios";
+import mongoose from "mongoose";
+import loglevel from "loglevel";
+
 const app = express();
-const bodyParser = require("body-parser");
-const axios = require("axios");
-const mongoose = require("mongoose");
-const logger = require("loglevel").getLogger("logger");
+const logger = loglevel.getLogger("logger");
 logger.setLevel("info");
 
 if (process.env.NODE_ENV !== "production") {
@@ -17,13 +19,13 @@ const WEBHOOK_URL = `${SERVER_URL}${BOT_URI}`;
 
 app.use(bodyParser.json());
 
-const botRouter = require("./routes/bot");
+import botRouter from "./routes/bot";
 app.use(BOT_URI, botRouter);
 
-const sendMessageRouter = require("./routes/sendMessage");
+import sendMessageRouter from "./routes/sendMessage";
 app.use("/bot/sendMessage", sendMessageRouter);
 
-const chatKeyRouter = require("./routes/chatKey");
+import chatKeyRouter from "./routes/chatKey";
 app.use("/bot/chatKey", chatKeyRouter);
 
 app.listen(PORT || 5000, async () => {
@@ -32,10 +34,8 @@ app.listen(PORT || 5000, async () => {
 });
 
 const init = async () => {
-	mongoose.connect(MONGO_CONNECTION_STRING, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true
-	});
+
+	mongoose.connect(MONGO_CONNECTION_STRING ?? "");
 	const db = mongoose.connection;
 	db.on("error", (err) => logger.error(err));
 	db.once("open", () => logger.info("Connected to database"));

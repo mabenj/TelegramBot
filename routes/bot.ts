@@ -1,9 +1,10 @@
-const express = require("express");
+import express from "express";
+import axios from "axios";
+import loglevel from "loglevel";
+import { createChat } from "../services/chatService";
+
+const logger = loglevel.getLogger("logger");
 const router = express.Router();
-const logger = require("loglevel").getLogger("logger");
-const axios = require("axios");
-const Chat = require("../models/chat");
-const { createChat } = require("../services/chatService");
 
 const { TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
@@ -58,4 +59,4 @@ router.post("/", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;

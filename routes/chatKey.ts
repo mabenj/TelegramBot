@@ -1,7 +1,15 @@
-const express = require("express");
+import express from "express";
+import loglevel from "loglevel";
 const router = express.Router();
-const logger = require("loglevel").getLogger("logger");
-const { getChat } = require("../services/chatService");
+const logger = loglevel.getLogger("logger");
+import { getChat } from "../services/chatService";
+
+interface IChatResponse {
+    chatId: string,
+    createdById: string,
+    chatKey: string,
+    creationDate: string
+}
 
 router.get("/:chatKey", async (req, res) => {
 	const { chatKey } = req.params;
@@ -9,7 +17,7 @@ router.get("/:chatKey", async (req, res) => {
 		if (chatKey) {
 			const chat = await getChat(chatKey.toUpperCase());
 			if (chat) {
-				return res.json({
+				return res.json(new IChatResonse {
 					chatId: chat.chatId,
 					createdById: chat.createdById,
 					chatKey: chat.chatKey,
@@ -24,4 +32,4 @@ router.get("/:chatKey", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;
